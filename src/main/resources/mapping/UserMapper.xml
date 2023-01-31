@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.wsn.mapper.UserMapper">
+    <select id="getReaderInfo" resultType="Reader">
+        select name, sex, birth, address, phone, username from reader_info where reader_id=#{id};
+    </select>
+    <select id="getAllReader" resultType="Reader">
+        select reader_id as readerId, name, sex, birth, address, phone, username, password from reader_info;
+    </select>
+    <update id="changeReaderInfo">
+        update reader_info set name=#{name}, sex=#{sex}, birth=#{birth}, address=#{address}, phone=#{phone} where reader_id=#{id};
+    </update>
+    <update id="changeReaderByAdmin">
+        update reader_info set name=#{name}, sex=#{sex}, birth=#{birth}, address=#{address}, phone=#{phone}, username=#{username}, password=#{password} where reader_id=#{id};
+    </update>
+    <update id="changeReaderPass">
+        update reader_info set password=#{password} where reader_id=#{id};
+    </update>
+    <select id="getPass" resultType="java.lang.String">
+        select password from reader_info where reader_id=#{id};
+    </select>
+</mapper>

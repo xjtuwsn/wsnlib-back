@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.wsn.mapper.BookMapper">
+    <select id="getAllBook" resultType="Book">
+        select book_id as id, book_info.name, author, publish, ISBN, introduction, lang, price, pub_date as date, class_info.name as className, left_num as leftNum, img
+        from book_info, class_info where book_info.class_id = class_info.class_id;
+    </select>
+    <insert id="addBook">
+        insert into book_info values (null, #{name}, #{author}, #{publish}, #{ISBN}, #{introduction}, #{lang}, #{price},
+                                      #{pubDate}, (select class_id from class_info where class_info.name=#{className}), #{leftNum}, #{img})
+    </insert>
+    <update id="changeBook">
+        update book_info set name=#{name}, author=#{author}, publish=#{publish}, ISBN=#{ISBN},
+                             introduction=#{introduction}, lang=#{lang}, price=#{price}, pub_date=#{pubDate},
+                             class_id=(select class_id from class_info where class_info.name=#{className}), left_num=#{leftNum},
+                             img=#{img} where book_id=#{id};
+    </update>
+    <update id="subLeftNum">
+        update book_info set left_num=left_num-1 where book_id=#{id};
+    </update>
+    <select id="getLeftNum" resultType="java.lang.Integer">
+        select left_num from book_info where book_id=#{id};
+    </select>
+    <update id="addLeftNum">
+        update book_info set left_num=left_num+1 where book_id=#{id};
+    </update>
+    <insert id="addLend">
+        insert into lend_list values (#{serNum}, #{bookId}, #{readerId}, default, #{bcakDate});
+    </insert>
+    <delete id="backLend">
+        delete from lend_list where ser_num=#{serNum};
+    </delete>
+    <select id="getLendList" resultType="LendInfo">
+        select ser_num as serNum, ISBN, name as bookName, lend_date as lendDate, back_date as backDate, author, img
+        from lend_list, book_info where reader_id=#{readerId};
+    </select>
+</mapper>
